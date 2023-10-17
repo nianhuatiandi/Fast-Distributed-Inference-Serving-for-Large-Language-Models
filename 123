@@ -1,0 +1,189 @@
+import time
+import threading
+import numpy as np
+import csv
+import multiprocessing as mp
+
+JOB_NUM = 3  # 发送请求的个数
+request_queue = mp.Queue()
+jct = mp.Queue()
+q0 = mp.Queue()
+q1 = mp.Queue()
+q2 = mp.Queue()
+q3 = mp.Queue()
+Q1 = 1
+rate = 2
+
+processes = []
+# 在opt-1.3B上的实验数据 单位: ms
+x = [1, 4, 16, 64, 256, 512, 1024]
+first_time = [5.88, 5.93, 6.57, 8.04, 23.8, 43.9, 98.5]
+next_time = [5.13, 5.11, 5.16, 5.22, 5.52, 5.72, 5.82]
+# 通过实验数据拟合每次迭代推理时间
+z1 = np.polyfit(x, first_time, 1)
+fit_first_iter_time = np.poly1d(z1)
+
+z2 = np.polyfit(x, next_time, 1)
+fit_next_iter_time = np.poly1d(z2)
+
+class Request:  # 推理请求，理论上输出长度未知，但为仿真实验，需要事先确定
+    def __init__(self, j_id, prompt_l, output_l, priority=-1):
+        self.j_id = j_id
+        self.prompt_l = int(prompt_l)
+        self.output_l = int(output_l)
+        self.first_iter_time = prompt_l
+        self.next_iter_time = fit_next_iter_time(prompt_l)
+        self.iter_count = 0  # 请求执行了几次迭代，iter_count==output_l时完成整个推理
+        self.priority = priority  # 请求目前处于第几级队列
+        self.create_time = time.time()  # 请求创建时间
+        self.count = 0
+def dispatch(request_queue, q0, q1, q2, q3):
+    while(True):
+        request = request_queue.get()
+        if (request.j_id == -1):
+            break
+        elif (request.first_iter_time <= Q1):
+            request.priority = 0
+            q0.put(request)
+        elif (request.first_iter_time <= Q1 * rate):
+            request.priority = 1
+            q1.put(request)
+        elif (request.first_iter_time <= Q1 * (rate**2)):
+            request.priority = 2
+            q2.put(request)
+        else:
+            request.priority = 3
+            q3.put(request)
+
+def exec(q0, q1, q2, q3,jct):
+    time.sleep(0.05)#模拟上一次处理完
+    while(jct.qsize() != JOB_NUM):
+
+        while (True):
+            if (q0.empty() and q1.empty() and q2.empty() and q3.empty()):
+                pass
+            if (q0.qsize()):
+                job = q0.get()
+                break
+            if (q1.qsize()):
+                job = q1.get()
+                break
+            if (q2.qsize()):
+                job = q2.get()
+                break
+            if (q3.qsize()):
+                job = q3.get()
+                break
+
+        iteration_num = Q1 * (rate ** job.priority)  # 获取当前任务在这次推理中需要执行多少轮
+        print(f"iteration number: {iteration_num} id: {job.j_id} priority {job.priority}")
+        if job.first_iter_time > job.count:
+            iter_time = job.first_iter_time
+            if (iter_time > iteration_num):
+                for i in range(iteration_num):
+                    print(f"job number: {job.j_id} pre work number: {job.count}")
+                    job.count+=1
+                    time.sleep(1)
+               # print(job.first_iter_time,job.count,end='  ??  \n')
+            else:
+                for i in range(iteration_num):
+                    if (job.count < job.first_iter_time):
+                        print(f"job number: {job.j_id} pre work number: {job.count}")
+                        time.sleep(1)
+                        job.count += 1
+                    else:
+                        print(f"job number: {job.j_id} token number: {job.iter_count}")
+                        time.sleep(1)  # ms
+                        job.iter_count += 1
+                job.first_iter_time -= iteration_num
+        else:
+            iter_time = job.next_iter_time
+
+            if iteration_num >= job.output_l - job.iter_count:
+                iteration_num = job.output_l - job.iter_count
+                for i in range(iteration_num):
+                    print(f"job number: {job.j_id} token number: {job.iter_count}")
+                    time.sleep(1)  # ms
+                    job.iter_count += 1
+                jct.put([time.time() - job.create_time,job.j_id])
+            else:
+                for i in range(iteration_num):
+                    print(f"job number: {job.j_id} token number: {job.iter_count}")
+                    time.sleep(1)  # ms
+                    job.iter_count += 1
+       # print(f"job number: {job.j_id} output length: {job.output_l}")
+        if (iteration_num <=job.iter_count):
+            continue
+        job.priority = job.priority + 1
+        if (job.priority > 3):
+            job.priority = 3
+        if (job.priority == 0):
+            q0.put(job)
+        elif (job.priority == 1):
+            q1.put(job)
+        elif (job.priority == 2):
+            q2.put(job)
+        elif (job.priority == 3):
+            q3.put(job)
+
+def fz(x):
+    if (x <= Q1):
+        return 0
+    elif (x <= Q1*rate):
+        return 1
+    elif (x <= Q1*(rate**2)):
+        return 2
+    else:
+        return 3
+def pre_data(rate, request_queue):
+    prompt_l_list = []
+    output_l_list = []
+    # 此处为读取orca数据集中的数据来构造request，可自行修改路径
+    f = open('C:/Users/18507/PycharmProjects/pythonProject2/2.txt', 'r')
+    with f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            row[0]=int(row[0])
+            row[1]=int(row[1])
+            prompt_l_list.append(row[0])
+            output_l_list.append(row[1])
+            print
+    j_id = 0
+
+    #first_time  6.137 90.35
+    #next_time 5.20 5.89
+    while j_id < JOB_NUM:
+        output_ = output_l_list[j_id]
+        input_ = prompt_l_list[j_id]
+        request = Request(j_id, input_, output_, fz(input_))
+     #   print(request.output_l,output_,end='<<  ')
+        print(f"job id : {j_id}  first time: {input_} priority {fz(input_)}")
+        request_queue.put(request)
+        j_id += 1
+        time.sleep(1 / rate)
+    request = Request(-1, 0, 0)
+    request_queue.put(request)
+    print('finish_predata')
+arrival_rate = 10000
+
+if __name__ == '__main__':
+    # 定义并启动发送请求的用户线程
+
+    one = mp.Process(target=pre_data, args=(arrival_rate,request_queue,))
+    processes.append(one)
+    two = mp.Process(target=dispatch,args=(request_queue, q0, q1, q2, q3,))
+    processes.append(two)
+    three = mp.Process(target=exec,args=(q0, q1, q2, q3,jct,))
+    processes.append(three)
+    one.start()
+    two.start()
+    three.start()
+    one.join()
+    two.join()
+    three.join()
+    sum = 0
+    while(jct.qsize()):
+        x = jct.get()
+        sum += int(x[0])
+        print(f"job id:{x[1]}  cost time: {x[0]}")
+    print(f"average time: {sum/JOB_NUM}")
