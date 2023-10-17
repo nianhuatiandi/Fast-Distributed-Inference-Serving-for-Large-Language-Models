@@ -1,0 +1,151 @@
+C:\Users\18507\.conda\envs\pytorch2023\python.exe C:\Users\18507\PycharmProjects\pythonProject2\1.py 
+finish_predata
+job number: 11 token number: 25 num 10 time 39.01791524887085 out 25 iteration_num 20
+q0 0  q1 0  q2 53  q3 27
+job number: 15 token number: 124 num 23 time 103.66216230392456 out 124 iteration_num 114
+q0 0  q1 0  q2 36  q3 31
+job number: 57 token number: 64 num 25 time 107.01761293411255 out 64 iteration_num 60
+q0 0  q1 0  q2 34  q3 31
+job number: 74 token number: 164 num 26 time 113.64407753944397 out 164 iteration_num 152
+q0 0  q1 0  q2 32  q3 32
+job number: 83 token number: 96 num 28 time 118.06797099113464 out 96 iteration_num 83
+q0 0  q1 0  q2 30  q3 32
+job number: 7 token number: 283 num 29 time 125.18444085121155 out 283 iteration_num 90
+q0 0  q1 0  q2 28  q3 33
+job number: 16 token number: 114 num 32 time 140.5533013343811 out 114 iteration_num 54
+q0 0  q1 0  q2 23  q3 35
+job number: 23 token number: 118 num 35 time 157.57848381996155 out 118 iteration_num 48
+q0 0  q1 0  q2 20  q3 35
+job number: 32 token number: 283 num 38 time 181.70417833328247 out 283 iteration_num 270
+q0 0  q1 0  q2 14  q3 38
+job number: 53 token number: 208 num 47 time 219.63363456726074 out 208 iteration_num 22
+q0 0  q1 0  q2 2  q3 41
+job number: 60 token number: 252 num 48 time 219.9760947227478 out 252 iteration_num 29
+q0 0  q1 0  q2 1  q3 41
+job number: 73 token number: 242 num 49 time 221.56287145614624 out 242 iteration_num 118
+q0 0  q1 0  q2 0  q3 41
+job number: 78 token number: 412 num 75 time 477.72562313079834 out 412 iteration_num 400
+q0 0  q1 0  q2 0  q3 15
+job number: 79 token number: 604 num 76 time 486.87221598625183 out 604 iteration_num 593
+q0 0  q1 0  q2 0  q3 14
+job number: 13 token number: 383 num 77 time 491.17581582069397 out 383 iteration_num 213
+q0 0  q1 0  q2 0  q3 13
+job number: 17 token number: 327 num 78 time 494.66326451301575 out 327 iteration_num 230
+q0 0  q1 0  q2 0  q3 12
+job number: 38 token number: 309 num 79 time 495.55234146118164 out 309 iteration_num 78
+q0 0  q1 0  q2 0  q3 11
+job number: 40 token number: 706 num 80 time 502.6322638988495 out 706 iteration_num 466
+q0 0  q1 0  q2 0  q3 10
+job number: 43 token number: 435 num 81 time 506.48427414894104 out 435 iteration_num 253
+q0 0  q1 0  q2 0  q3 9
+job number: 46 token number: 321 num 82 time 510.59691882133484 out 321 iteration_num 275
+q0 0  q1 0  q2 0  q3 8
+job number: 47 token number: 455 num 83 time 514.6580986976624 out 455 iteration_num 265
+q0 0  q1 0  q2 0  q3 7
+job number: 48 token number: 377 num 84 time 518.5147969722748 out 377 iteration_num 250
+q0 0  q1 0  q2 0  q3 6
+job number: 62 token number: 359 num 85 time 521.8650274276733 out 359 iteration_num 229
+q0 0  q1 0  q2 0  q3 5
+job number: 65 token number: 686 num 86 time 528.9244492053986 out 686 iteration_num 458
+q0 0  q1 0  q2 0  q3 4
+job number: 68 token number: 485 num 87 time 535.9987933635712 out 485 iteration_num 462
+q0 0  q1 0  q2 0  q3 3
+job number: 71 token number: 328 num 88 time 537.509886264801 out 328 iteration_num 101
+q0 0  q1 0  q2 0  q3 2
+job number: 75 token number: 306 num 89 time 541.1568851470947 out 306 iteration_num 240
+q0 0  q1 0  q2 0  q3 1
+job number: 80 token number: 313 num 90 time 542.3239250183105 out 313 iteration_num 81
+q0 0  q1 0  q2 0  q3 0
+job id:0  cost time: 3.256073474884033
+job id:1  cost time: 8.732275247573853
+job id:2  cost time: 12.265702247619629
+job id:3  cost time: 15.239955186843872
+job id:4  cost time: 18.294376373291016
+job id:5  cost time: 20.960921049118042
+job id:6  cost time: 24.73847532272339
+job id:9  cost time: 31.661146879196167
+job id:10  cost time: 34.20737934112549
+job id:11  cost time: 39.01779627799988
+job id:14  cost time: 47.113085985183716
+job id:20  cost time: 57.94256830215454
+job id:21  cost time: 59.73720955848694
+job id:22  cost time: 63.34335470199585
+job id:25  cost time: 70.4186315536499
+job id:26  cost time: 74.17620325088501
+job id:27  cost time: 76.17700433731079
+job id:28  cost time: 80.15720772743225
+job id:31  cost time: 81.14858913421631
+job id:34  cost time: 88.29312705993652
+job id:35  cost time: 90.63332152366638
+job id:36  cost time: 92.52595400810242
+job id:15  cost time: 103.66216230392456
+job id:42  cost time: 106.33257937431335
+job id:57  cost time: 107.01761293411255
+job id:74  cost time: 113.64407753944397
+job id:45  cost time: 117.36974334716797
+job id:83  cost time: 118.06797099113464
+job id:7  cost time: 125.18444085121155
+job id:49  cost time: 135.49788403511047
+job id:50  cost time: 139.2378649711609
+job id:16  cost time: 140.5533013343811
+job id:51  cost time: 143.06712698936462
+job id:58  cost time: 151.86482000350952
+job id:23  cost time: 157.57848381996155
+job id:61  cost time: 160.25316619873047
+job id:64  cost time: 167.9492428302765
+job id:32  cost time: 181.70417833328247
+job id:69  cost time: 184.56868147850037
+job id:72  cost time: 191.749347448349
+job id:81  cost time: 209.23380088806152
+job id:82  cost time: 211.79190039634705
+job id:86  cost time: 214.74126982688904
+job id:87  cost time: 215.90052366256714
+job id:88  cost time: 217.30542922019958
+job id:89  cost time: 218.73396921157837
+job id:53  cost time: 219.63363456726074
+job id:60  cost time: 219.9760947227478
+job id:73  cost time: 221.56287145614624
+job id:8  cost time: 238.21501088142395
+job id:12  cost time: 245.76179552078247
+job id:18  cost time: 253.58921194076538
+job id:19  cost time: 260.6870608329773
+job id:24  cost time: 267.88176226615906
+job id:29  cost time: 281.357382774353
+job id:30  cost time: 294.97217082977295
+job id:33  cost time: 309.73295402526855
+job id:37  cost time: 320.2115068435669
+job id:39  cost time: 325.45618748664856
+job id:41  cost time: 333.223219871521
+job id:44  cost time: 347.4788236618042
+job id:52  cost time: 373.4989330768585
+job id:54  cost time: 381.0330274105072
+job id:55  cost time: 389.3680763244629
+job id:56  cost time: 396.75709414482117
+job id:59  cost time: 403.5167236328125
+job id:63  cost time: 410.56439685821533
+job id:66  cost time: 418.468980550766
+job id:67  cost time: 427.4199342727661
+job id:70  cost time: 434.7712392807007
+job id:76  cost time: 449.285267829895
+job id:77  cost time: 456.2328724861145
+job id:84  cost time: 463.9619719982147
+job id:85  cost time: 471.40832567214966
+job id:78  cost time: 477.7247791290283
+job id:79  cost time: 486.87221598625183
+job id:13  cost time: 491.17581582069397
+job id:17  cost time: 494.66326451301575
+job id:38  cost time: 495.55234146118164
+job id:40  cost time: 502.6314489841461
+job id:43  cost time: 506.4831876754761
+job id:46  cost time: 510.59691882133484
+job id:47  cost time: 514.6580986976624
+job id:48  cost time: 518.5147969722748
+job id:62  cost time: 521.8646671772003
+job id:65  cost time: 528.9244492053986
+job id:68  cost time: 535.9987933635712
+job id:71  cost time: 537.509886264801
+job id:75  cost time: 541.1568851470947
+job id:80  cost time: 542.3239250183105
+average time: 252.22222222222223
+
+Process finished with exit code 0
