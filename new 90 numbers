@@ -1,0 +1,127 @@
+import time
+import threading
+import numpy as np
+import csv
+import multiprocessing as mp
+
+JOB_NUM = 90  # 发送请求的个数
+request_queue = mp.Queue()
+jct = mp.Queue()
+q0 = mp.Queue()
+q1 = mp.Queue()
+q2 = mp.Queue()
+q3 = mp.Queue()
+Q1 = 6
+rate = 7
+def fz(x):
+    if (x <= Q1):
+        return 0
+    elif (x <= Q1*rate):
+        return 1
+    elif (x <= Q1*(rate**2)):
+        return 2
+    else:
+        return 3
+
+class Request:  # 推理请求，理论上输出长度未知，但为仿真实验，需要事先确定
+    def __init__(self, j_id, prompt_l, output_l, priority=-1):
+        self.j_id = j_id
+        self.prompt_l = int(prompt_l)
+        self.output_l = int(output_l)
+        self.first_iter_time = prompt_l
+        self.next_iter_time = output_l
+        self.iter_count = 0  # 请求执行了几次迭代，iter_count==output_l时完成整个推理
+        self.priority = priority  # 请求目前处于第几级队列
+        self.create_time = time.time()  # 请求创建时间
+        self.count = 0
+
+def dispatch(request_queue, multi):
+    while(True):
+        request = request_queue.get()
+        if (request.j_id == -1):
+            break
+        request.priority = fz (request.first_iter_time)
+        multi[request.priority].put(request)
+    print("finish dispatch")
+
+def exec(multi,jct):
+    time.sleep(0.05)#模拟上一次处理完
+    print()
+    while (jct.qsize() < JOB_NUM):
+        x = Request(-2,0,0)
+        for i in range(4):
+            if (multi[i].qsize()):
+                x = multi[i].get()
+                break
+        if (x.j_id == -2):
+            continue
+        num = Q1*(rate**x.priority)
+        flag = 0
+        if (x.first_iter_time > 0):
+            tim = x.first_iter_time
+            if (tim<=num):#可以处理完,减过了，所以不用加count
+                num = int(tim)
+                x.first_iter_time=-1
+            for i in range(num):
+                x.first_iter_time-=1
+                x.count += 1
+                time.sleep(0.001)
+            x.priority = min(3, x.priority + 1)
+        else :
+            tim = x.next_iter_time
+            if (tim <= num):
+                num = int(tim)
+                flag = 1
+            for i in range(num):
+                x.iter_count += 1
+                x.next_iter_time -= 1
+                time.sleep(0.001)
+            if (flag):
+                jct.put([time.time()-x.create_time,x.j_id])
+                continue
+            x.priority = min(3, x.priority + 1)
+        multi[x.priority].put(x)
+def pre_data(rate, request_queue):
+    prompt_l_list = []
+    output_l_list = []
+    # 此处为读取orca数据集中的数据来构造request，可自行修改路径
+    f = open('C:/Users/18507/PycharmProjects/pythonProject2/1.txt', 'r')
+    with f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            row[0]=int(row[0])
+            row[1]=int(row[1])
+            prompt_l_list.append(row[0])
+            output_l_list.append(row[1])
+            print
+    j_id = 0
+    while j_id < JOB_NUM:
+        output_ = output_l_list[j_id]
+        input_ = prompt_l_list[j_id]
+        request = Request(j_id, input_, output_, fz(input_))
+        request_queue.put(request)
+        j_id += 1
+        time.sleep(1 / rate)
+    request = Request(-1, 0, 0)
+    request_queue.put(request)
+    print('finish_predata')
+arrival_rate = 1000
+
+if __name__ == '__main__':
+    # 定义并启动发送请求的用户线程
+    multi = [q0,q1,q2,q3]
+    one = mp.Process(target=pre_data, args=(arrival_rate,request_queue,))
+    two = mp.Process(target=dispatch,args=(request_queue, multi,))
+    three = mp.Process(target=exec,args=(multi,jct,))
+    one.start()
+    two.start()
+    three.start()
+    one.join()
+    two.join()
+    three.join()
+    sum = 0
+    while(jct.qsize()):
+        x = jct.get()
+        sum += int(x[0])
+        print(f"job id:{x[1]}  cost time: {x[0]}")
+    print(f"average time: {sum/JOB_NUM}")
